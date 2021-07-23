@@ -1,21 +1,9 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Carousel from "react-material-ui-carousel";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import { CustomContainer, CustomTitle, CustomText, ReviewCard } from "./style";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: "gray",
-    flexGrow: 1,
-  },
-  containerBackground: {
-    boxShadow: "10px 5px 5px gray",
-  },
-}));
-
-export default function SectionFive(props) {
-  const classes = useStyles();
+export default function Testimonies() {
   var items = [
     {
       name: "Testimonials for our training program",
