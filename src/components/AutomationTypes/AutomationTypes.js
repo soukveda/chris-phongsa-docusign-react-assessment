@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Grid, Typography, Tab, Box, Link } from "@material-ui/core";
 import {
@@ -8,6 +8,7 @@ import {
   CustomBackground,
   CustomText,
 } from "./style";
+import FirebaseInstance from "../../api/FirebaseInstance";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -43,7 +44,17 @@ function a11yProps(index) {
 }
 
 export default function AutomationTypes() {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [uiTitle, setUiTitle] = useState("Default Title");
+  const [apiTitle, setApiTitle] = useState("Default Title");
+  const [mobileTitle, setMobileTitle] = useState("Default Title");
+  const [automationTypes, setAutomationTypes] = useState([
+    {
+      name: "Default title",
+      description: "Default Description",
+    },
+  ]);
+  const [isQueried, setIsQueried] = useState(false);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -51,13 +62,30 @@ export default function AutomationTypes() {
 
   const preventDefault = (event) => event.preventDefault();
 
+  useEffect(() => {
+    FirebaseInstance.get("/automationTypes.json")
+      .then((resp) => {
+        setUiTitle(resp.data["uiAuto"].name);
+        setApiTitle(resp.data["apiAuto"].name);
+        setMobileTitle(resp.data["mobileAuto"].name);
+        const queriedTypes = [];
+        Object.values(resp.data["uiAuto"].types).forEach((type) => {
+          queriedTypes.push(type);
+        });
+
+        setAutomationTypes(queriedTypes);
+        setIsQueried(true);
+      })
+      .catch();
+  }, []);
+
   return (
     <React.Fragment>
       <CustomTabContainer>
         <CustomTabs value={value} onChange={handleChange}>
-          <Tab label="UI Automation" {...a11yProps(0)} />
-          <Tab disabled label="API Automation" {...a11yProps(1)} />
-          <Tab disabled label="Mobile Automation" {...a11yProps(2)} />
+          <Tab label={uiTitle} {...a11yProps(0)} />
+          <Tab disabled label={apiTitle} {...a11yProps(1)} />
+          <Tab disabled label={mobileTitle} {...a11yProps(2)} />
         </CustomTabs>
       </CustomTabContainer>
       <CustomBackground>
@@ -65,18 +93,30 @@ export default function AutomationTypes() {
           <Grid container direction="column">
             <Grid item container spacing={2}>
               <Grid item sm={2}>
-                <CustomCard>cypress</CustomCard>
+                <CustomCard>{automationTypes[0].name}</CustomCard>
+              </Grid>
+              <Grid item sm={8}>
+                <CustomText>{automationTypes[0].description}</CustomText>
+                <CustomText>
+                  <Link href="#" onClick={preventDefault}>
+                    Learn more
+                  </Link>
+                </CustomText>
+              </Grid>
+            </Grid>
+            <Grid item container spacing={2}>
+              <Grid item sm={2}>
+                <CustomCard>
+                  {isQueried
+                    ? automationTypes[1].name
+                    : automationTypes[0].name}
+                </CustomCard>
               </Grid>
               <Grid item sm={8}>
                 <CustomText>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem
-                  ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-                  sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut Lorem ipsum dolor sit
+                  {isQueried
+                    ? automationTypes[1].description
+                    : automationTypes[0].description}
                 </CustomText>
                 <CustomText>
                   <Link href="#" onClick={preventDefault}>
@@ -87,18 +127,17 @@ export default function AutomationTypes() {
             </Grid>
             <Grid item container spacing={2}>
               <Grid item sm={2}>
-                <CustomCard>cucumberjs</CustomCard>
+                <CustomCard>
+                  {isQueried
+                    ? automationTypes[2].name
+                    : automationTypes[0].name}
+                </CustomCard>
               </Grid>
               <Grid item sm={8}>
                 <CustomText>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem
-                  ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-                  sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut Lorem ipsum dolor sit
+                  {isQueried
+                    ? automationTypes[2].description
+                    : automationTypes[0].description}
                 </CustomText>
                 <CustomText>
                   <Link href="#" onClick={preventDefault}>
@@ -109,18 +148,17 @@ export default function AutomationTypes() {
             </Grid>
             <Grid item container spacing={2}>
               <Grid item sm={2}>
-                <CustomCard>puppeteer</CustomCard>
+                <CustomCard>
+                  {isQueried
+                    ? automationTypes[3].name
+                    : automationTypes[0].name}
+                </CustomCard>
               </Grid>
               <Grid item sm={8}>
                 <CustomText>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem
-                  ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-                  sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut Lorem ipsum dolor sit
+                  {isQueried
+                    ? automationTypes[3].description
+                    : automationTypes[0].description}
                 </CustomText>
                 <CustomText>
                   <Link href="#" onClick={preventDefault}>
@@ -131,18 +169,17 @@ export default function AutomationTypes() {
             </Grid>
             <Grid item container spacing={2}>
               <Grid item sm={2}>
-                <CustomCard>Selenium</CustomCard>
+                <CustomCard>
+                  {isQueried
+                    ? automationTypes[4].name
+                    : automationTypes[0].name}
+                </CustomCard>
               </Grid>
               <Grid item sm={8}>
                 <CustomText>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem
-                  ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-                  sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut Lorem ipsum dolor sit
+                  {isQueried
+                    ? automationTypes[4].description
+                    : automationTypes[0].description}
                 </CustomText>
                 <CustomText>
                   <Link href="#" onClick={preventDefault}>
@@ -153,40 +190,17 @@ export default function AutomationTypes() {
             </Grid>
             <Grid item container spacing={2}>
               <Grid item sm={2}>
-                <CustomCard>Robot</CustomCard>
+                <CustomCard>
+                  {isQueried
+                    ? automationTypes[5].name
+                    : automationTypes[0].name}
+                </CustomCard>
               </Grid>
               <Grid item sm={8}>
                 <CustomText>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem
-                  ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-                  sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut Lorem ipsum dolor sit
-                </CustomText>
-                <CustomText>
-                  <Link href="#" onClick={preventDefault}>
-                    Learn more
-                  </Link>
-                </CustomText>
-              </Grid>
-            </Grid>
-            <Grid item container spacing={2}>
-              <Grid item sm={2}>
-                <CustomCard>GEB</CustomCard>
-              </Grid>
-              <Grid item sm={8}>
-                <CustomText>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem
-                  ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                  eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum
-                  dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                  tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-                  sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                  incididunt ut Lorem ipsum dolor sit
+                  {isQueried
+                    ? automationTypes[5].description
+                    : automationTypes[0].description}
                 </CustomText>
                 <CustomText>
                   <Link href="#" onClick={preventDefault}>

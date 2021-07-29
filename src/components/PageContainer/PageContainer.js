@@ -8,7 +8,7 @@ import Testimonies from "../Testimonies/Testimonies";
 import Header from "../Header/Header";
 import AutomationSchool from "../AutomationSchool/AutomationSchool";
 
-export default function PageContainer() {
+export default function PageContainer(props) {
   return (
     <Grid
       container
@@ -23,7 +23,7 @@ export default function PageContainer() {
         <Scheduling />
       </Grid>
       <Grid item>
-        <AutomationSchoolBenefits />
+        <AutomationSchoolBenefits likes={props.likes} />
       </Grid>
       <Grid item>
         <AutomationTypes />
@@ -35,7 +35,7 @@ export default function PageContainer() {
         <Testimonies />
       </Grid>
       <Grid item>
-        <AutomationSchool />
+        <AutomationSchool likes={props.likes} />
       </Grid>
     </Grid>
   );

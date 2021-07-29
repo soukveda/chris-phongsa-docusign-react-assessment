@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
 import {
   CustomBackground,
@@ -6,8 +6,22 @@ import {
   CustomText,
   CustomButton,
 } from "./style";
+import FirebaseInstance from "../../api/FirebaseInstance";
 
 export default function CustomTraining() {
+  const [trainingTitle, setTrainingTitle] = useState("Default Title");
+  const [trainingDescription, setTrainingDescription] = useState(
+    "Default Description"
+  );
+  useEffect(() => {
+    FirebaseInstance.get("/customTraining.json")
+      .then((resp) => {
+        setTrainingTitle(resp.data.title);
+        setTrainingDescription(resp.data.description);
+      })
+      .catch();
+  }, []);
+
   return (
     <CustomBackground>
       <Grid
@@ -19,17 +33,8 @@ export default function CustomTraining() {
         alignItems="center"
       >
         <Grid item>
-          <CustomTitle>Do you have custom training needs?</CustomTitle>
-          <CustomText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor
-            sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut Lorem ipsum dolor sit Lorem ipsum dolor sit amet,
-            consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-            Lorem ipsum dolor sit Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut Lorem ipsum
-            dolor sit
-          </CustomText>
+          <CustomTitle>{trainingTitle}</CustomTitle>
+          <CustomText>{trainingDescription}</CustomText>
           <CustomButton size="large" disableRipple>
             Learn more
           </CustomButton>

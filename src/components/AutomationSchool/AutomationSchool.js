@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Grid } from "@material-ui/core";
 import {
   AutomationSchoolContainer,
@@ -9,8 +9,23 @@ import {
   CustomText,
   CustomTitle,
 } from "./style";
+import FirebaseInstance from "../../api/FirebaseInstance";
 
-export default function AutomationSchool() {
+export default function AutomationSchool(props) {
+  const [autoTitle, setAutoTitle] = useState(props.title);
+  const [autoDescription, setAutoDescription] = useState(props.title);
+  const [sectionTitle, setSectionTitle] = useState(props.title);
+  const [sectionDescription, setSectionDescription] = useState(props.title);
+  useEffect(() => {
+    FirebaseInstance.get("/automationSchool.json")
+      .then((resp) => {
+        setAutoTitle(resp.data.titles["autoSchool"].title);
+        setAutoDescription(resp.data.titles["autoSchool"].description);
+        setSectionTitle(resp.data.titles["whatWeOffer"].title);
+        setSectionDescription(resp.data.titles["whatWeOffer"].description);
+      })
+      .catch();
+  }, []);
   return (
     <CustomBackground>
       <Grid
@@ -22,31 +37,19 @@ export default function AutomationSchool() {
         alignItems="center"
       >
         <Grid item>
-          <CustomTitle>
-            Some title Some title Some title Some title Some title
-          </CustomTitle>
+          <CustomTitle>{sectionTitle}</CustomTitle>
         </Grid>
         <Grid item xs={4}>
-          <CustomText>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut Lorem ipsum dolor sit amet, consectetur
-            adipiscing elit, sed do eiusmod tempor incididunt ut Lorem ipsum
-            dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut
-          </CustomText>
+          <CustomText>{sectionDescription}</CustomText>
         </Grid>
         <Grid item>
           <AutomationSchoolContainer>
-            <AutomationTitle>Automation School</AutomationTitle>
-            <AutomationText>
-              Automation School can help your software teams to learn and do
-              Test Automation using a variety of tech stacks in API, UI, and
-              Mobile Automation. please enter a few details about what you are
-              looking for and we will get back to you within a business day.
-            </AutomationText>
+            <AutomationTitle>{autoTitle}</AutomationTitle>
+            <AutomationText>{autoDescription}</AutomationText>
             <AutomationButton>
               <CustomText>Continue</CustomText>
             </AutomationButton>
+            <AutomationText>Likes for DocuSign: {props.likes}</AutomationText>
           </AutomationSchoolContainer>
         </Grid>
       </Grid>
